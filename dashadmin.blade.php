@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,8 @@
     <title>Dashboard Admin PKL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         /* CSS Reset dan Pengaturan Dasar */
         * {
@@ -19,6 +20,7 @@
         body {
             display: flex;
             background-color: #f4f7fc;
+            min-height: 100vh;
         }
 
         /* --- Sidebar (Menu Kiri) --- */
@@ -28,8 +30,11 @@
             color: white;
             height: 100vh;
             padding: 20px;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
         .sidebar h2 {
@@ -53,7 +58,7 @@
             align-items: center;
             padding: 12px 15px;
             border-radius: 8px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .sidebar ul li a i {
@@ -61,59 +66,128 @@
             width: 20px;
             text-align: center;
         }
-        
+
         /* Memberi highlight pada menu yang aktif */
         .sidebar ul li.active a,
         .sidebar ul li a:hover {
             background-color: #ffffff;
             color: #1a73e8;
+            transform: translateX(5px);
         }
 
         /* --- Konten Utama (Bagian Kanan) --- */
         .main-content {
-            flex-grow: 1; /* Mengambil sisa ruang */
+            flex-grow: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        
+
         .header {
             background-color: #ffffff;
             padding: 15px 30px;
             border-bottom: 1px solid #e0e0e0;
-            width: 100%;
-            height: 69px;
-            background-color:#343a40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .header .left-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .left-section h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+
+        .header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .user-info .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #1a73e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .header .user-info .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header .user-info .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .header .user-info .user-role {
+            color: #666;
+            font-size: 12px;
         }
 
         .content-body {
             padding: 30px;
+            flex-grow: 1;
+            background-color: #f8f9fa;
         }
 
         .content-body h1 {
             font-size: 28px;
             color: #333;
             margin-bottom: 25px;
+            font-weight: 600;
         }
 
         /* --- Card Statistik --- */
         .stats-cards {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 5 kolom dengan lebar sama */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
 
         .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
         .card i {
             font-size: 3em;
-            opacity: 0.7;
+            opacity: 0.9;
         }
-        
+
         .card .card-content {
             margin-left: 20px;
         }
@@ -121,37 +195,43 @@
         .card .card-title {
             font-size: 16px;
             font-weight: 500;
+            margin-bottom: 5px;
+            opacity: 0.9;
         }
 
         .card .card-value {
             font-size: 2.2em;
             font-weight: 700;
         }
-        
+
         /* Warna untuk setiap card */
-        .card.blue { background-color: #1a73e8; }
-        .card.green { background-color: #28a745; }
-        .card.yellow { background-color: #ffc107; }
-        .card.red { background-color: #dc3545; }
-        .card.purple { background-color: #6f42c1; }
-        
+        .card.blue { background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%); }
+        .card.green { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .card.yellow { background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); }
+        .card.red { background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%); }
+        .card.purple { background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 100%); }
+        .card.teal { background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%); }
+
         /* --- Tabel Daftar Mahasiswa --- */
         .recent-list {
             background-color: #ffffff;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow-x: auto;
         }
 
         .recent-list h2 {
             margin-bottom: 20px;
             font-size: 20px;
             color: #333;
+            font-weight: 600;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         th, td {
@@ -160,13 +240,20 @@
             border-bottom: 1px solid #f0f0f0;
             vertical-align: middle;
         }
-        
+
         thead th {
-            color: #888;
+            background-color: #f8f9fa;
+            color: #495057;
             font-weight: 600;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
         tbody tr:last-child td {
             border-bottom: none;
         }
@@ -178,18 +265,79 @@
 
         /* --- Label Status --- */
         .status {
-            padding: 5px 12px;
-            border-radius: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         /* Warna untuk setiap status */
-        .status.menunggu { background-color: #fff0c2; color: #f39c12; }
-        .status.diterima { background-color: #d4edda; color: #28a745; }
-        .status.berjalan { background-color: #d1e7fd; color: #1a73e8; }
-        .status.ditolak { background-color: #f2f2f2; color: #888; }
+        .status.menunggu { background-color: #fff3cd; color: #856404; }
+        .status.diterima { background-color: #d4edda; color: #155724; }
+        .status.berjalan { background-color: #cce5ff; color: #004085; }
+        .status.ditolak { background-color: #f8d7da; color: #721c24; }
+
+        /* --- Responsivitas --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header .left-section h1 {
+                font-size: 20px;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card .card-value {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .right-section {
+                display: none;
+            }
+
+            .content-body h1 {
+                font-size: 24px;
+            }
+
+            .recent-list {
+                padding: 15px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
 
     </style>
 </head>
@@ -199,43 +347,42 @@
         <ul>
             <li class="active"><a href="{{ route('admin.page') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="{{ route('prodi.index') }}"><i class="fas fa-file-alt"></i> Data Prodi</a></li>
-            <li><a href="{{ route('datamitra') }}"><i class="fas fa-building"></i> Data Perusahaan Mitra</a></li>
-            <li><a href="{{ route('datadokumen') }}"><i class="fas fa-file-alt"></i> Data Dokumen</a></li>
-            <li><a href="{{ route('jadwal-seminar.index') }}"><i class="fas fa-calendar-check"></i> Jadwal Seminar</a></li>
-            <li><a href="{{ route('jadwal-bimbingan.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Bimbingan</a></li>
             <li><a href="{{ route('datadospem') }}"><i class="fas fa-users"></i> Data Pembimbing</a></li>
             <li><a href="{{ route('datamhs') }}"><i class="fas fa-user-graduate"></i> Data Mahasiswa</a></li>
+            <li><a href="{{ route('datamitra') }}"><i class="fas fa-building"></i> Data Perusahaan Mitra</a></li>
+            <li><a href="{{ route('datadokumen') }}"><i class="fas fa-file-alt"></i> Data Dokumen</a></li>
+            <li><a href="{{ route('jadwalseminar.index') }}"><i class="fas fa-calendar-check"></i> Jadwal Seminar</a></li>
+            <li><a href="{{ route('jadwalbimbingan.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Bimbingan</a></li>
+            <li><a href="{{ route('transkripnilai.index') }}"><i class="fas fa-calendar-alt"></i>Transkip Nilai</a></li>
             
+            
+        </ul>
     </nav>
 
     <main class="main-content">
-        <header class="header"></header>
-        
+        <header class="header">
+            <div class="left-section">
+                <h1>Selamat Datang di Dashboard Admin</h1>
+            </div>
+            <div class="right-section">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+                <a href="{{ route('logout') }}" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+
         <div class="content-body">
-            <h1>Dashboard Admin PKL</h1>
 
             <div class="stats-cards">
-                <div class="card blue">
-                    <i class="fas fa-users"></i>
-                    <div class="card-content">
-                        <div class="card-title">Total Mahasiswa PKL</div>
-                        <div class="card-value">450</div>
-                    </div>
-                </div>
-                <div class="card green">
-                    <i class="fas fa-check-circle"></i>
-                    <div class="card-content">
-                        <div class="card-title">Selesai PKL</div>
-                        <div class="card-value">320</div>
-                    </div>
-                </div>
-                <div class="card yellow">
-                    <i class="fas fa-spinner"></i>
-                    <div class="card-content">
-                        <div class="card-title">Sedang Berjalan</div>
-                        <div class="card-value">100</div>
-                    </div>
-                </div>
                 <div class="card red">
                     <i class="fas fa-hourglass-start"></i>
                     <div class="card-content">
@@ -250,6 +397,34 @@
                         <div class="card-value">{{ $totalDosen ?? 0 }}</div>
                     </div>
                 </div>
+                <div class="card blue">
+                    <i class="fas fa-user-graduate"></i>
+                    <div class="card-content">
+                        <div class="card-title">Total Mahasiswa</div>
+                        <div class="card-value">{{ $totalMahasiswa ?? 0 }}</div>
+                    </div>
+                </div>
+                <div class="card green">
+                    <i class="fas fa-building"></i>
+                    <div class="card-content">
+                        <div class="card-title">Total Perusahaan</div>
+                        <div class="card-value">{{ $totalPerusahaan ?? 0 }}</div>
+                    </div>
+                </div>
+                <div class="card yellow">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="card-content">
+                        <div class="card-title">Jadwal Seminar</div>
+                        <div class="card-value">{{ $totalSeminar ?? 0 }}</div>
+                    </div>
+                </div>
+                <div class="card teal">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div class="card-content">
+                        <div class="card-title">Jadwal Bimbingan</div>
+                        <div class="card-value">{{ $totalBimbingan ?? 0 }}</div>
+                    </div>
+                </div>
             </div>
 
             <div class="recent-list">
@@ -259,40 +434,35 @@
                         <tr>
                             <th>NIM</th>
                             <th>Nama</th>
-                            <th>Perusahaan</th>
-                            <th>Tanggal Pengajuan</th>
-                            <th>Status</th>
+                            <th>Prodi</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Status PKL</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>2401301010</td>
-                            <td>Rina Febriani</td>
-                            <td>PT. Inovasi Digital</td>
-                            <td>01 September 2025</td>
-                            <td><span class="status menunggu">Menunggu</span></td>
-                        </tr>
-                        <tr>
-                            <td>2401301011</td>
-                            <td>Bambang Wijaya</td>
-                            <td>CV. Solusi Tepat Guna</td>
-                            <td>02 September 2025</td>
-                            <td><span class="status diterima">Diterima</span></td>
-                        </tr>
-                        <tr>
-                            <td>2401301012</td>
-                            <td>Citra Lestari</td>
-                            <td>PT. Teknologi Maju</td>
-                            <td>03 September 2025</td>
-                            <td><span class="status berjalan">Berjalan</span></td>
-                        </tr>
-                        <tr>
-                            <td>2401301013</td>
-                            <td>Dedi Hidayat</td>
-                            <td>PT. Inovasi Digital</td>
-                            <td>04 September 2025</td>
-                            <td><span class="status ditolak">Ditolak</span></td>
-                        </tr>
+                        @forelse($recentMahasiswa ?? [] as $mahasiswa)
+                            @if(is_object($mahasiswa))
+                                <tr>
+                                    <td>{{ $mahasiswa->nim ?? 'N/A' }}</td>
+                                    <td>{{ $mahasiswa->nama ?? 'N/A' }}</td>
+                                    <td>{{ $mahasiswa->prodi ?? 'N/A' }}</td>
+                                    <td>{{ $mahasiswa->created_at ? $mahasiswa->created_at->format('d M Y') : 'N/A' }}</td>
+                                    <td><span class="status {{ strtolower($mahasiswa->status_pkl ?? 'menunggu') }}">{{ $mahasiswa->status_pkl ?? 'Menunggu' }}</span></td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary">Lihat</a>
+                                    </td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: #666;">Invalid data</td>
+                                </tr>
+                            @endif
+                        @empty
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #666;">Belum ada data mahasiswa</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
