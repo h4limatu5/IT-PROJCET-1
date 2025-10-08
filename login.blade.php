@@ -28,6 +28,9 @@
       background: #1a73e8; color: white;
       padding: 25px; text-align: center;
     }
+    .login-header img {
+      width: 80px; height: auto; display: block; margin: 0 auto 10px;
+    }
     .login-header h1 { font-size: 24px; margin: 0; }
     .login-header p { font-size: 14px; margin-top: 5px; }
 
@@ -104,6 +107,7 @@
 <body>
   <div class="login-container">
     <div class="login-header">
+      
       <h1>Sistem Informasi PKL</h1>
       <p>Politeknik Negeri Tanah Laut</p>
     </div>
