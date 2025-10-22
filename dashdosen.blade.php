@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin PKL</title>
+    <title>Dashboard Dosen PKL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -345,13 +345,15 @@
     <nav class="sidebar">
         <h2>Dashboard</h2>
         <ul>
-            <li class="active"><a href="{{ route('dashadmin') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li class="active"><a href="{{ route('dashdosen') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="{{ route('prodi.index') }}"><i class="fas fa-file-alt"></i> Data Prodi</a></li>
-            <li><a href="{{ route('dosen.index') }}"><i class="fas fa-users"></i> Data Dosen Pembimbing</a></li>
+            <li><a href="{{ route('dosen.profile', ['dosen' => 1]) }}"><i class="fas fa-user"></i> Profil</a></li>
             <li><a href="{{ route('mahasiswa.index') }}"><i class="fas fa-user-graduate"></i> Data Mahasiswa</a></li>
             <li><a href="{{ route('perusahaan.index') }}"><i class="fas fa-building"></i> Data Perusahaan Mitra</a></li>
             <li><a href="{{ route('dokumen.index') }}"><i class="fas fa-file-alt"></i> Data Dokumen</a></li>
-            <li><a href="{{ route('nilai.index', ['role' => 'admin', 'user_id' => 1]) }}"><i class="fas fa-calendar-alt"></i> Transkip Nilai</a></li>
+            <li><a href="{{ route('seminar.index', ['role' => 'dosen', 'user_id' => 1]) }}"><i class="fas fa-calendar-check"></i> Jadwal Seminar</a></li>
+            <li><a href="{{ route('bimbingan.index', ['role' => 'dosen', 'user_id' => 1]) }}"><i class="fas fa-calendar-alt"></i> Jadwal Bimbingan</a></li>
+            <li><a href="{{ route('nilai.index', ['role' => 'dosen', 'user_id' => 1]) }}"><i class="fas fa-calendar-alt"></i>Transkip Nilai</a></li>
 
 
         </ul>
@@ -360,7 +362,7 @@
     <main class="main-content">
         <header class="header">
             <div class="left-section">
-                <h1>Selamat Datang di Dashboard Admin</h1>
+                <h1>Selamat Datang di Dashboard Dosen</h1>
             </div>
             <div class="right-section">
                 <div class="user-info">
@@ -368,8 +370,8 @@
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="user-details">
-                        <div class="user-name">Admin</div>
-                        <div class="user-role">Administrator</div>
+                        <div class="user-name">Dosen</div>
+                        <div class="user-role">Dosen Pembimbing</div>
                     </div>
                 </div>
                 <a href="#" class="btn btn-outline-danger btn-sm">
@@ -381,87 +383,91 @@
         <div class="content-body">
 
             <div class="stats-cards">
-                <div class="card red">
-                    <i class="fas fa-hourglass-start"></i>
-                    <div class="card-content">
-                        <div class="card-title">Laporan Menunggu</div>
-                        <div class="card-value">{{ \App\Models\Perusahaan::count() }}</div>
-                    </div>
-                </div>
-                <div class="card purple">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <div class="card-content">
-                        <div class="card-title">Total Dosen</div>
-                        <div class="card-value">{{ \App\Models\Dosen::count() }}</div>
-                    </div>
-                </div>
                 <div class="card blue">
-                    <i class="fas fa-user-graduate"></i>
+                    <i class="fas fa-users"></i>
                     <div class="card-content">
-                        <div class="card-title">Total Mahasiswa</div>
-                        <div class="card-value">{{ \App\Models\Mahasiswa::count() }}</div>
+                        <div class="card-title">Mahasiswa Bimbingan</div>
+                        <div class="card-value">0</div>
                     </div>
                 </div>
                 <div class="card green">
-                    <i class="fas fa-building"></i>
-                    <div class="card-content">
-                        <div class="card-title">Total Perusahaan</div>
-                        <div class="card-value">{{ \App\Models\Perusahaan::count() }}</div>
-                    </div>
-                </div>
-                <div class="card yellow">
                     <i class="fas fa-calendar-check"></i>
                     <div class="card-content">
-                        <div class="card-title">Jadwal Seminar</div>
-                        <div class="card-value">{{ \App\Models\Seminar::count() }}</div>
+                        <div class="card-title">Bimbingan Hari Ini</div>
+                        <div class="card-value">0</div>
+                    </div>
+                </div>
+                <div class="card purple">
+                    <i class="fas fa-file-alt"></i>
+                    <div class="card-content">
+                        <div class="card-title">Laporan Pending</div>
+                        <div class="card-value">0</div>
                     </div>
                 </div>
                 <div class="card teal">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <div class="card-content">
-                        <div class="card-title">Jadwal Bimbingan</div>
-                        <div class="card-value">{{ \App\Models\Bimbingan::count() }}</div>
+                        <div class="card-title">Mahasiswa Lulus</div>
+                        <div class="card-value">0</div>
                     </div>
                 </div>
             </div>
 
             <div class="recent-list">
-                <h2>Daftar Mahasiswa Terbaru</h2>
+                <h2>Mahasiswa Bimbingan Aktif</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>NIM</th>
-                            <th>Nama</th>
-                            <th>Prodi</th>
-                            <th>Tanggal Daftar</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Perusahaan</th>
                             <th>Status PKL</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse(\App\Models\Mahasiswa::latest()->take(5)->get() as $mahasiswa)
                         <tr>
-                            <td>{{ $mahasiswa->nim }}</td>
-                            <td>{{ $mahasiswa->name }}</td>
-                            <td>{{ $mahasiswa->prodi->nama_prodi ?? '-' }}</td>
-                            <td>{{ $mahasiswa->created_at->format('d/m/Y') }}</td>
-                            <td>
-                                @if($mahasiswa->perusahaan_id)
-                                    <span class="status diterima">Aktif PKL</span>
-                                @else
-                                    <span class="status menunggu">Belum PKL</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('mahasiswa.show', $mahasiswa) }}" class="btn btn-sm btn-info">Lihat</a>
-                                <a href="{{ route('mahasiswa.edit', $mahasiswa) }}" class="btn btn-sm btn-warning">Edit</a>
-                            </td>
+                            <td colspan="5" style="text-align: center; color: #666;">Belum ada mahasiswa bimbingan</td>
                         </tr>
-                        @empty
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="recent-list" style="margin-top: 30px;">
+                <h2>Jadwal Bimbingan Hari Ini</h2>
+                <table>
+                    <thead>
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #666;">Belum ada data mahasiswa</td>
+                            <th>Waktu</th>
+                            <th>Mahasiswa</th>
+                            <th>Topik</th>
+                            <th>Status</th>
                         </tr>
-                        @endforelse
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #666;">Tidak ada jadwal bimbingan hari ini</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="recent-list" style="margin-top: 30px;">
+                <h2>Penilaian Mahasiswa</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NIM</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Mata Kuliah</th>
+                            <th>Nilai</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #666;">Belum ada data penilaian</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
