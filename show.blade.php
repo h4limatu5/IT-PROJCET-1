@@ -6,18 +6,40 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>Detail Program Studi</h3>
+                    <h3>Detail Perusahaan</h3>
                 </div>
                 <div class="card-body">
-                    @if($prodi->photo)
-                        <div class="mb-3">
-                            <img src="{{ asset('storage/' . $prodi->photo) }}" alt="Foto {{ $prodi->nama_prodi }}" style="max-width: 300px; max-height: 300px; object-fit: cover; border-radius: 8px;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>{{ $perusahaan->nama_perusahaan }}</h4>
+                            <p><strong>Alamat:</strong> {{ $perusahaan->alamat }}</p>
+                            @if($perusahaan->provinsi)
+                                <p><strong>Provinsi:</strong> {{ $perusahaan->provinsi }}</p>
+                            @endif
+                            <p><strong>Telepon:</strong> {{ $perusahaan->telepon }}</p>
+                            <p><strong>Email:</strong> {{ $perusahaan->email }}</p>
+                            @if($perusahaan->deskripsi)
+                                <p><strong>Deskripsi:</strong> {{ $perusahaan->deskripsi }}</p>
+                            @endif
+                            <p><strong>Program Studi:</strong></p>
+                            <ul>
+                                @forelse($perusahaan->prodis as $prodi)
+                                    <li>{{ $prodi->nama_prodi }}</li>
+                                @empty
+                                    <li>Tidak ada program studi yang terkait</li>
+                                @endforelse
+                            </ul>
                         </div>
-                    @endif
-                    <h4>{{ $prodi->nama_prodi }}</h4>
-                    <p><strong>Deskripsi:</strong> {{ $prodi->deskripsi ?? 'Tidak ada deskripsi' }}</p>
-                    <a href="{{ route('prodi.index') }}" class="btn btn-secondary">Kembali</a>
-                    <a href="{{ route('prodi.edit', $prodi) }}" class="btn btn-warning">Edit</a>
+                        <div class="col-md-4">
+                            @if($perusahaan->logo)
+                                <img src="{{ asset('storage/' . $perusahaan->logo) }}" alt="Logo" class="img-fluid">
+                            @else
+                                <p>Tidak ada logo</p>
+                            @endif
+                        </div>
+                    </div>
+                    <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('perusahaan.edit', $perusahaan) }}" class="btn btn-warning">Edit</a>
                 </div>
             </div>
         </div>
