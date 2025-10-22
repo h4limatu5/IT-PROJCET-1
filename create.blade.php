@@ -2,48 +2,74 @@
 
 @section('content')
 <div class="container">
-    <h1>Tambah Mahasiswa</h1>
+    <h1>Tambah Nilai PKL</h1>
 
-    <form action="{{ route('mahasiswa.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('nilai.store') }}" method="POST">
         @csrf
 
-        <div class="form-group">
-            <label for="name">Nama</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-        </div>
+        <input type="hidden" name="role" value="{{ $role }}">
+        <input type="hidden" name="user_id" value="{{ $userId }}">
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="nim">NIM</label>
-            <input type="text" class="form-control" id="nim" name="nim" required>
-        </div>
-
-        <div class="form-group">
-            <label for="prodi_id">Prodi</label>
-            <select class="form-control" id="prodi_id" name="prodi_id" required>
-                <option value="">Pilih Prodi</option>
-                @foreach($prodis as $prodi)
-                    <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
+        <div class="mb-3">
+            <label for="mahasiswa_id" class="form-label">Mahasiswa</label>
+            <select name="mahasiswa_id" id="mahasiswa_id" class="form-control" required>
+                <option value="">Pilih Mahasiswa</option>
+                @foreach($mahasiswas as $mahasiswa)
+                    <option value="{{ $mahasiswa->id }}">{{ $mahasiswa->name }} ({{ $mahasiswa->nim }})</option>
                 @endforeach
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="text" class="form-control" id="phone" name="phone">
+        @if($role !== 'perusahaan')
+        <div class="mb-3">
+            <label for="dosen_id" class="form-label">Dosen Pembimbing</label>
+            <select name="dosen_id" id="dosen_id" class="form-control">
+                <option value="">Pilih Dosen</option>
+                @foreach($dosens as $dosen)
+                    <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+
+        @if($role !== 'dosen')
+        <div class="mb-3">
+            <label for="perusahaan_id" class="form-label">Perusahaan</label>
+            <select name="perusahaan_id" id="perusahaan_id" class="form-control">
+                <option value="">Pilih Perusahaan</option>
+                @foreach($perusahaans as $perusahaan)
+                    <option value="{{ $perusahaan->id }}">{{ $perusahaan->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+
+        @if($role !== 'perusahaan')
+        <div class="mb-3">
+            <label for="nilai_dosen" class="form-label">Nilai Dosen (0-100)</label>
+            <input type="number" name="nilai_dosen" id="nilai_dosen" class="form-control" min="0" max="100" step="0.01">
         </div>
 
-        <div class="form-group">
-            <label for="photo">Photo</label>
-            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+        <div class="mb-3">
+            <label for="komentar_dosen" class="form-label">Komentar Dosen</label>
+            <textarea name="komentar_dosen" id="komentar_dosen" class="form-control" rows="3"></textarea>
+        </div>
+        @endif
+
+        @if($role !== 'dosen')
+        <div class="mb-3">
+            <label for="nilai_perusahaan" class="form-label">Nilai Perusahaan (0-100)</label>
+            <input type="number" name="nilai_perusahaan" id="nilai_perusahaan" class="form-control" min="0" max="100" step="0.01">
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary">Kembali</a>
+        <div class="mb-3">
+            <label for="komentar_perusahaan" class="form-label">Komentar Perusahaan</label>
+            <textarea name="komentar_perusahaan" id="komentar_perusahaan" class="form-control" rows="3"></textarea>
+        </div>
+        @endif
+
+        <button type="submit" class="btn btn-primary">Simpan Nilai</button>
+        <a href="{{ route('nilai.index', ['role' => $role, 'user_id' => $userId]) }}" class="btn btn-secondary">Kembali</a>
     </form>
 </div>
 @endsection
