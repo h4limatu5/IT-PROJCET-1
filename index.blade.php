@@ -2,53 +2,37 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Daftar Dosen</h3>
-                </div>
-                <div class="card-body">
-                    <a href="{{ route('dosen.create') }}" class="btn btn-primary mb-3">Tambah Dosen</a>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>Email</th>
-                                    <th>NIP</th>
-                                    <th>Program Studi</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($dosens as $dosen)
-                                <tr>
-                                    <td>{{ $dosen->name }}</td>
-                                    <td>{{ $dosen->email }}</td>
-                                    <td>{{ $dosen->nip }}</td>
-                                    <td>{{ $dosen->prodi->nama_prodi ?? 'N/A' }}</td>
-                                    <td>
-                                        <a href="{{ route('dosen.show', $dosen) }}" class="btn btn-sm btn-info">Lihat</a>
-                                        <a href="{{ route('dosen.edit', $dosen) }}" class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('dosen.destroy', $dosen) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin?')">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Tidak ada data dosen</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1>Kalender Jadwal</h1>
+    <div id="calendar"></div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: {
+            url: '{{ route("kalender.events", ["role" => $role, "user_id" => $userId]) }}',
+            method: 'GET'
+        },
+        eventClick: function(info) {
+            alert('Event: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.description + '\nLocation: ' + info.event.extendedProps.location + '\nStatus: ' + info.event.extendedProps.status);
+        },
+        eventDidMount: function(info) {
+            // Reminder: Check for events 1 day before
+            var eventDate = new Date(info.event.start);
+            var today = new Date();
+            var diffTime = eventDate - today;
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+                alert('Reminder: ' + info.event.title + ' besok!');
+            }
+        }
+    });
+    calendar.render();
+});
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 @endsection
