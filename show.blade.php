@@ -2,58 +2,24 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Detail Dosen</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Informasi Dasar</h5>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th>Nama:</th>
-                                    <td>{{ $dosen->name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Email:</th>
-                                    <td>{{ $dosen->email }}</td>
-                                </tr>
-                                <tr>
-                                    <th>NIP:</th>
-                                    <td>{{ $dosen->nip }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Program Studi:</th>
-                                    <td>{{ $dosen->prodi->nama_prodi ?? 'N/A' }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Statistik</h5>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th>Jumlah Bimbingan:</th>
-                                    <td>{{ $dosen->bimbingans->count() }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jumlah Seminar:</th>
-                                    <td>{{ $dosen->seminars->count() }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jumlah Nilai:</th>
-                                    <td>{{ $dosen->nilais->count() }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <a href="{{ route('dosen.edit', $dosen) }}" class="btn btn-warning">Edit</a>
-                    <a href="{{ route('dosen.index') }}" class="btn btn-secondary">Kembali</a>
-                </div>
-            </div>
+    <h1>Detail Mahasiswa</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ $mahasiswa->name }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ $mahasiswa->email }}</p>
+            <p class="card-text"><strong>NIM:</strong> {{ $mahasiswa->nim }}</p>
+            <p class="card-text"><strong>Prodi:</strong> {{ $mahasiswa->prodi->nama_prodi ?? 'N/A' }}</p>
+            <p class="card-text"><strong>Phone:</strong> {{ $mahasiswa->phone ?? 'N/A' }}</p>
+            @if($mahasiswa->photo)
+                <p class="card-text"><strong>Photo:</strong></p>
+                <img src="{{ asset('storage/' . $mahasiswa->photo) }}" alt="Photo" width="150" height="150">
+            @endif
         </div>
     </div>
+
+    <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary mt-3">Kembali</a>
+    <a href="{{ route('mahasiswa.edit', $mahasiswa) }}" class="btn btn-warning mt-3">Edit</a>
+    <a href="{{ route('mahasiswa.profile', $mahasiswa) }}" class="btn btn-info mt-3">Profil</a>
 </div>
 @endsection

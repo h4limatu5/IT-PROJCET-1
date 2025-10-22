@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Dosen</title>
+    <title>Profil Mahasiswa PKL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        /* CSS Reset dan Pengaturan Dasar */
         * {
             margin: 0;
             padding: 0;
@@ -16,300 +18,536 @@
         }
 
         body {
-            background-color: #f8f9fa;
+            display: flex;
+            background-color: #f4f7fc;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* --- Sidebar (Menu Kiri) --- */
+        .sidebar {
+            width: 260px;
+            background-color: #1a73e8;
+            color: white;
+            height: 100vh;
             padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
-        .profile-header {
-            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-            color: white;
-            padding: 40px 20px;
-            border-radius: 15px;
+        .sidebar h2 {
+            text-align: center;
             margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: #d4e3ff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            width: 20px;
             text-align: center;
         }
 
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
+        /* Memberi highlight pada menu yang aktif */
+        .sidebar ul li.active a,
+        .sidebar ul li a:hover {
+            background-color: #ffffff;
+            color: #1a73e8;
+            transform: translateX(5px);
+        }
+
+        /* --- Konten Utama (Bagian Kanan) --- */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .header .left-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .header .left-section h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+
+        .header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header .user-info .user-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: #1a73e8;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 3em;
-            overflow: hidden;
+            color: white;
+            font-weight: 600;
         }
 
-        .profile-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .header .user-info .user-details {
+            display: flex;
+            flex-direction: column;
         }
 
-        .profile-name {
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
+        .header .user-info .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
         }
 
-        .profile-role {
-            font-size: 1.2em;
-            opacity: 0.9;
+        .header .user-info .user-role {
+            color: #666;
+            font-size: 12px;
         }
 
-        .profile-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .content-body {
+            padding: 30px;
+            flex-grow: 1;
+            background-color: #f8f9fa;
         }
 
-        .profile-card {
-            background: white;
+        .content-body h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* --- Profil Container --- */
+        .profile-container {
+            background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .profile-card h3 {
-            color: #333;
-            margin-bottom: 20px;
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #1a73e8;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        .profile-photo-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 48px;
+            margin: 0 auto 20px;
+            border: 5px solid #1a73e8;
+        }
+
+        .profile-name {
+            font-size: 24px;
             font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-nim {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* --- Form Profil --- */
+        .profile-form {
+            margin-top: 30px;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
         }
 
-        .profile-card h3 i {
+        .form-section h3 i {
             margin-right: 10px;
             color: #1a73e8;
         }
 
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .info-value {
-            color: #333;
-            text-align: right;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
-            color: white;
-            border-radius: 10px;
-        }
-
-        .stat-number {
-            font-size: 2em;
-            font-weight: 700;
+        .form-group label {
             display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
         }
 
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: #1a73e8;
-            color: white;
-            border: none;
-            padding: 12px 20px;
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            text-decoration: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
             display: flex;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            justify-content: center;
+            padding: 12px 15px;
+            border: 2px dashed #1a73e8;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            color: #1a73e8;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .back-btn:hover {
-            background: #1557b0;
+        .file-input-label:hover {
+            background-color: #e3f2fd;
+        }
+
+        .file-input-label i {
+            margin-right: 10px;
+        }
+
+        .current-photo {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .current-photo img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        /* --- Tombol Aksi --- */
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1557b0;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
         }
 
-        .back-btn i {
-            margin-right: 8px;
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
         }
 
+        .btn-secondary:hover {
+            background-color: #545b62;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        /* --- Alert Messages --- */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* --- Responsivitas --- */
         @media (max-width: 768px) {
-            .profile-content {
-                grid-template-columns: 1fr;
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
             }
 
-            .profile-name {
-                font-size: 2em;
+            .main-content {
+                margin-left: 0;
             }
 
-            .profile-avatar {
-                width: 100px;
-                height: 100px;
-                font-size: 2.5em;
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header .left-section h1 {
+                font-size: 20px;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .profile-container {
+                padding: 20px;
+            }
+
+            .profile-photo,
+            .profile-photo-placeholder {
+                width: 120px;
+                height: 120px;
+            }
+
+            .action-buttons .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
             }
         }
+
+        @media (max-width: 480px) {
+            .header .right-section {
+                display: none;
+            }
+
+            .content-body h1 {
+                font-size: 24px;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <a href="{{ route('dashdosen') }}" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-    </a>
+    <nav class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="{{ route('dashboardmhs') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li class="active"><a href="{{ route('mahasiswa.profile', ['mahasiswa' => $mahasiswa->id]) }}"><i class="fas fa-user"></i> Profil</a></li>
+            <li><a href="{{ route('dokumen.index') }}"><i class="fas fa-file-upload"></i>Upload Dokumen</a></li>
+            <li><a href="{{ route('seminar.index') }}"><i class="fas fa-calendar-check"></i> Jadwal Seminar</a></li>
+            <li><a href="{{ route('bimbingan.index') }}"><i class="fas fa-calendar-alt"></i> Jadwal Bimbingan</a></li>
+            <li><a href="{{ route('nilai.index') }}"><i class="fas fa-chart-line"></i> Nilai</a></li>
+            <li><a href="{{ route('kalender.index') }}"><i class="fas fa-calendar"></i> Kalender</a></li>
+        </ul>
+    </nav>
 
-    <div class="container">
-        <div class="profile-header">
-            <div class="profile-avatar">
-                @if($dosen->photo)
-                    <img src="{{ asset('storage/' . $dosen->photo) }}" alt="Foto Profil">
-                @else
-                    <i class="fas fa-user"></i>
-                @endif
+    <main class="main-content">
+        <header class="header">
+            <div class="left-section">
+                <h1>Profil Mahasiswa</h1>
             </div>
-            <h1 class="profile-name">{{ $dosen->name }}</h1>
-            <p class="profile-role">Dosen Pembimbing PKL</p>
-        </div>
-
-        <div class="profile-content">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size: 0.85em; padding: 6px 10px; margin-bottom: 15px;">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" style="font-size: 0.75em;"></button>
+            <div class="right-section">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">{{ $mahasiswa->name }}</div>
+                        <div class="user-role">Mahasiswa PKL</div>
+                    </div>
                 </div>
-            @endif
+                <a href="#" class="btn btn-outline-danger btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
 
-            @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul class="mb-0">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="content-body">
+            <div class="profile-container">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> {{ session('success') }}
+                    </div>
+                @endif
+
+                <div class="profile-header">
+                    @if($mahasiswa->photo)
+                        <img src="{{ asset('storage/' . $mahasiswa->photo) }}" alt="Foto Profil" class="profile-photo">
+                    @else
+                        <div class="profile-photo-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    @endif
+                    <h2 class="profile-name">{{ $mahasiswa->name }}</h2>
+                    <p class="profile-nim">NIM: {{ $mahasiswa->nim }}</p>
                 </div>
-            @endif
 
-            <div class="profile-card">
-                <h3><i class="fas fa-user-circle"></i> Informasi Pribadi</h3>
-                <form action="{{ route('dosen.updateProfile', $dosen) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('mahasiswa.updateProfile', $mahasiswa) }}" method="POST" enctype="multipart/form-data" class="profile-form">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="dosen_id" value="{{ $dosen->id }}">
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $dosen->name) }}" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle"></i> Informasi Pribadi</h3>
+
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $mahasiswa->name }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ $mahasiswa->email }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nim">NIM</label>
+                            <input type="text" class="form-control" id="nim" name="nim" value="{{ $mahasiswa->nim }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prodi">Program Studi</label>
+                            <select class="form-control" id="prodi" name="prodi_id">
+                                @foreach(\App\Models\Prodi::all() as $prodi)
+                                    <option value="{{ $prodi->id }}" {{ old('prodi_id', $mahasiswa->prodi_id) == $prodi->id ? 'selected' : '' }}>
+                                        {{ $prodi->nama_prodi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $dosen->email) }}" required>
-                        @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    <div class="form-section">
+                        <h3><i class="fas fa-phone"></i> Kontak & Media</h3>
 
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">No. Telepon</label>
-                        <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $dosen->phone) }}">
-                        @error('phone')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                        <div class="form-group">
+                            <label for="phone">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ $mahasiswa->phone }}" placeholder="Masukkan nomor telepon">
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="photo" class="form-label">Foto Profil</label>
-                        <input type="file" class="form-control @error('photo') is-invalid @enderror" id="photo" name="photo" accept="image/*">
-                        @error('photo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        @if($dosen->photo)
-                            <div class="mt-2">
-                                <img src="{{ asset('storage/' . $dosen->photo) }}" alt="Foto Profil" width="100" class="img-thumbnail">
+                        <div class="form-group">
+                            <label for="photo">Foto Profil</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" class="file-input" id="photo" name="photo" accept="image/*">
+                                <label for="photo" class="file-input-label">
+                                    <i class="fas fa-upload"></i> Pilih Foto Baru
+                                </label>
                             </div>
-                        @endif
+                            @if($mahasiswa->photo)
+                                <div class="current-photo">
+                                    <p>Foto saat ini:</p>
+                                    <img src="{{ asset('storage/' . $mahasiswa->photo) }}" alt="Foto Saat Ini">
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">NIP</label>
-                        <input type="text" class="form-control" value="{{ $dosen->nip }}" readonly>
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan Perubahan
+                        </button>
+                        <a href="{{ route('dashboardmhs') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+                        </a>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Program Studi</label>
-                        <input type="text" class="form-control" value="{{ $dosen->prodi->nama_prodi ?? 'N/A' }}" readonly>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </form>
             </div>
-
-            <div class="profile-card">
-                <h3><i class="fas fa-chart-bar"></i> Statistik Aktivitas</h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $dosen->bimbingans->count() }}</span>
-                        <span class="stat-label">Bimbingan</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $dosen->seminars->count() }}</span>
-                        <span class="stat-label">Seminar</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">{{ $dosen->nilais->count() }}</span>
-                        <span class="stat-label">Penilaian</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <h3><i class="fas fa-calendar-alt"></i> Aktivitas Terbaru</h3>
-                <div class="info-item">
-                    <span class="info-label">Bimbingan Terakhir</span>
-                    <span class="info-value">{{ $dosen->bimbingans->last()->date ?? 'Belum ada' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Seminar Terakhir</span>
-                    <span class="info-value">{{ $dosen->seminars->last()->date ?? 'Belum ada' }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Penilaian Terakhir</span>
-                    <span class="info-value">{{ $dosen->nilais->last()->created_at ?? 'Belum ada' }}</span>
-                </div>
-            </div>
         </div>
-    </div>
+    </main>
+
 </body>
 </html>

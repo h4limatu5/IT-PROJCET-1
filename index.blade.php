@@ -2,37 +2,61 @@
 
 @section('content')
 <div class="container">
-    <h1>Kalender Jadwal</h1>
-    <div id="calendar"></div>
+    <h1>Daftar Mahasiswa</h1>
+
+    <div class="mb-3">
+        <a href="{{ route('mahasiswa.bulkCreate') }}" class="btn btn-success">Tambah Bulk</a>
+        <a href="{{ route('mahasiswa.create') }}" class="btn btn-primary">Tambah Mahasiswa</a>
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>NIM</th>
+                    <th>Prodi</th>
+                    <th>Phone</th>
+                    <th>Photo</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($mahasiswas as $mahasiswa)
+                <tr>
+                    <td>{{ $mahasiswa->id }}</td>
+                    <td>{{ $mahasiswa->name }}</td>
+                    <td>{{ $mahasiswa->email }}</td>
+                    <td>{{ $mahasiswa->nim }}</td>
+                    <td>{{ $mahasiswa->prodi->nama_prodi ?? 'N/A' }}</td>
+                    <td>{{ $mahasiswa->phone ?? 'N/A' }}</td>
+                    <td>
+                        @if($mahasiswa->photo)
+                            <img src="{{ asset('storage/' . $mahasiswa->photo) }}" alt="Photo" width="50" height="50">
+                        @else
+                            No Photo
+                        @endif
+                    </td>
+                    <td>
+                        <a href="{{ route('mahasiswa.show', $mahasiswa) }}" class="btn btn-info btn-sm">Lihat</a>
+                        <a href="{{ route('mahasiswa.edit', $mahasiswa) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ route('mahasiswa.profile', $mahasiswa) }}" class="btn btn-secondary btn-sm">Profil</a>
+                        <form action="{{ route('mahasiswa.destroy', $mahasiswa) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin?')">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: {
-            url: '{{ route("kalender.events", ["role" => $role, "user_id" => $userId]) }}',
-            method: 'GET'
-        },
-        eventClick: function(info) {
-            alert('Event: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.description + '\nLocation: ' + info.event.extendedProps.location + '\nStatus: ' + info.event.extendedProps.status);
-        },
-        eventDidMount: function(info) {
-            // Reminder: Check for events 1 day before
-            var eventDate = new Date(info.event.start);
-            var today = new Date();
-            var diffTime = eventDate - today;
-            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (diffDays === 1) {
-                alert('Reminder: ' + info.event.title + ' besok!');
-            }
-        }
-    });
-    calendar.render();
-});
-</script>
-
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 @endsection
