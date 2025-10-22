@@ -2,74 +2,88 @@
 
 @section('content')
 <div class="container">
-    <h1>Tambah Nilai PKL</h1>
-
-    <form action="{{ route('nilai.store') }}" method="POST">
-        @csrf
-
-        <input type="hidden" name="role" value="{{ $role }}">
-        <input type="hidden" name="user_id" value="{{ $userId }}">
-
-        <div class="mb-3">
-            <label for="mahasiswa_id" class="form-label">Mahasiswa</label>
-            <select name="mahasiswa_id" id="mahasiswa_id" class="form-control" required>
-                <option value="">Pilih Mahasiswa</option>
-                @foreach($mahasiswas as $mahasiswa)
-                    <option value="{{ $mahasiswa->id }}">{{ $mahasiswa->name }} ({{ $mahasiswa->nim }})</option>
-                @endforeach
-            </select>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Tambah Perusahaan</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('perusahaan.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="nama_perusahaan">Nama Perusahaan *</label>
+                            <input type="text" class="form-control @error('nama_perusahaan') is-invalid @enderror" id="nama_perusahaan" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}" required>
+                            @error('nama_perusahaan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="alamat">Alamat *</label>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" required>{{ old('alamat') }}</textarea>
+                            @error('alamat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="provinsi">Provinsi</label>
+                            <input type="text" class="form-control @error('provinsi') is-invalid @enderror" id="provinsi" name="provinsi" value="{{ old('provinsi') }}">
+                            @error('provinsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="telepon">Telepon *</label>
+                            <input type="text" class="form-control @error('telepon') is-invalid @enderror" id="telepon" name="telepon" value="{{ old('telepon') }}" required>
+                            @error('telepon')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi">{{ old('deskripsi') }}</textarea>
+                            @error('deskripsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">Logo Perusahaan</label>
+                            <input type="file" class="form-control @error('logo') is-invalid @enderror" id="logo" name="logo" accept="image/*">
+                            @error('logo')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Program Studi</label>
+                            <div class="row">
+                                @foreach($prodis as $prodi)
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="prodi_{{ $prodi->id }}" name="prodi_ids[]" value="{{ $prodi->id }}" {{ in_array($prodi->id, old('prodi_ids', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="prodi_{{ $prodi->id }}">
+                                            {{ $prodi->nama_prodi }}
+                                        </label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @error('prodi_ids')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Kembali</a>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        @if($role !== 'perusahaan')
-        <div class="mb-3">
-            <label for="dosen_id" class="form-label">Dosen Pembimbing</label>
-            <select name="dosen_id" id="dosen_id" class="form-control">
-                <option value="">Pilih Dosen</option>
-                @foreach($dosens as $dosen)
-                    <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        @if($role !== 'dosen')
-        <div class="mb-3">
-            <label for="perusahaan_id" class="form-label">Perusahaan</label>
-            <select name="perusahaan_id" id="perusahaan_id" class="form-control">
-                <option value="">Pilih Perusahaan</option>
-                @foreach($perusahaans as $perusahaan)
-                    <option value="{{ $perusahaan->id }}">{{ $perusahaan->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        @if($role !== 'perusahaan')
-        <div class="mb-3">
-            <label for="nilai_dosen" class="form-label">Nilai Dosen (0-100)</label>
-            <input type="number" name="nilai_dosen" id="nilai_dosen" class="form-control" min="0" max="100" step="0.01">
-        </div>
-
-        <div class="mb-3">
-            <label for="komentar_dosen" class="form-label">Komentar Dosen</label>
-            <textarea name="komentar_dosen" id="komentar_dosen" class="form-control" rows="3"></textarea>
-        </div>
-        @endif
-
-        @if($role !== 'dosen')
-        <div class="mb-3">
-            <label for="nilai_perusahaan" class="form-label">Nilai Perusahaan (0-100)</label>
-            <input type="number" name="nilai_perusahaan" id="nilai_perusahaan" class="form-control" min="0" max="100" step="0.01">
-        </div>
-
-        <div class="mb-3">
-            <label for="komentar_perusahaan" class="form-label">Komentar Perusahaan</label>
-            <textarea name="komentar_perusahaan" id="komentar_perusahaan" class="form-control" rows="3"></textarea>
-        </div>
-        @endif
-
-        <button type="submit" class="btn btn-primary">Simpan Nilai</button>
-        <a href="{{ route('nilai.index', ['role' => $role, 'user_id' => $userId]) }}" class="btn btn-secondary">Kembali</a>
-    </form>
+    </div>
 </div>
 @endsection

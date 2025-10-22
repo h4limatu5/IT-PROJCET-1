@@ -2,93 +2,93 @@
 
 @section('content')
 <div class="container">
-    <h1>Edit Nilai PKL</h1>
-
-    <form action="{{ route('nilai.update', $nilai->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <input type="hidden" name="role" value="{{ $role }}">
-        <input type="hidden" name="user_id" value="{{ $userId }}">
-
-        <div class="mb-3">
-            <label for="mahasiswa_id" class="form-label">Mahasiswa</label>
-            <select name="mahasiswa_id" id="mahasiswa_id" class="form-control" required disabled>
-                <option value="{{ $nilai->mahasiswa_id }}" selected>{{ $nilai->mahasiswa->name ?? 'N/A' }} ({{ $nilai->mahasiswa->nim ?? '' }})</option>
-            </select>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Edit Perusahaan</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('perusahaan.update', $perusahaan) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label for="nama_perusahaan">Nama Perusahaan *</label>
+                            <input type="text" class="form-control @error('nama_perusahaan') is-invalid @enderror" id="nama_perusahaan" name="nama_perusahaan" value="{{ old('nama_perusahaan', $perusahaan->nama_perusahaan) }}" required>
+                            @error('nama_perusahaan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="alamat">Alamat *</label>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" required>{{ old('alamat', $perusahaan->alamat) }}</textarea>
+                            @error('alamat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="provinsi">Provinsi</label>
+                            <input type="text" class="form-control @error('provinsi') is-invalid @enderror" id="provinsi" name="provinsi" value="{{ old('provinsi', $perusahaan->provinsi) }}">
+                            @error('provinsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="telepon">Telepon *</label>
+                            <input type="text" class="form-control @error('telepon') is-invalid @enderror" id="telepon" name="telepon" value="{{ old('telepon', $perusahaan->telepon) }}" required>
+                            @error('telepon')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $perusahaan->email) }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi">{{ old('deskripsi', $perusahaan->deskripsi) }}</textarea>
+                            @error('deskripsi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">Logo Perusahaan</label>
+                            <input type="file" class="form-control @error('logo') is-invalid @enderror" id="logo" name="logo" accept="image/*">
+                            @if($perusahaan->logo)
+                                <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah logo. Logo saat ini:</small>
+                                <img src="{{ asset('storage/' . $perusahaan->logo) }}" alt="Logo" width="100" class="mt-2">
+                            @endif
+                            @error('logo')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Program Studi</label>
+                            <div class="row">
+                                @foreach($prodis as $prodi)
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="prodi_{{ $prodi->id }}" name="prodi_ids[]" value="{{ $prodi->id }}" {{ $perusahaan->prodis->contains($prodi->id) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="prodi_{{ $prodi->id }}">
+                                            {{ $prodi->nama_prodi }}
+                                        </label>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @error('prodi_ids')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <a href="{{ route('perusahaan.index') }}" class="btn btn-secondary">Kembali</a>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="dosen_id" class="form-label">Dosen Pembimbing</label>
-            <select name="dosen_id" id="dosen_id" class="form-control" disabled>
-                <option value="{{ $nilai->dosen_id }}" selected>{{ $nilai->dosen->name ?? 'N/A' }}</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="perusahaan_id" class="form-label">Perusahaan</label>
-            <select name="perusahaan_id" id="perusahaan_id" class="form-control" disabled>
-                <option value="{{ $nilai->perusahaan_id }}" selected>{{ $nilai->perusahaan->name ?? 'N/A' }}</option>
-            </select>
-        </div>
-
-        @if($role === 'dosen')
-            <div class="mb-3">
-                <label for="nilai_dosen" class="form-label">Nilai Dosen (0-100)</label>
-                <input type="number" name="nilai_dosen" id="nilai_dosen" class="form-control" min="0" max="100" step="0.01" value="{{ $nilai->nilai_dosen }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="komentar_dosen" class="form-label">Komentar Dosen</label>
-                <textarea name="komentar_dosen" id="komentar_dosen" class="form-control" rows="3">{{ $nilai->komentar_dosen }}</textarea>
-            </div>
-        @endif
-
-        @if($role === 'perusahaan')
-            <div class="mb-3">
-                <label for="nilai_perusahaan" class="form-label">Nilai Perusahaan (0-100)</label>
-                <input type="number" name="nilai_perusahaan" id="nilai_perusahaan" class="form-control" min="0" max="100" step="0.01" value="{{ $nilai->nilai_perusahaan }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="komentar_perusahaan" class="form-label">Komentar Perusahaan</label>
-                <textarea name="komentar_perusahaan" id="komentar_perusahaan" class="form-control" rows="3">{{ $nilai->komentar_perusahaan }}</textarea>
-            </div>
-        @endif
-
-        @if($role === 'kaprodi' || $role === 'admin')
-            <div class="mb-3">
-                <label for="nilai_dosen" class="form-label">Nilai Dosen (0-100)</label>
-                <input type="number" name="nilai_dosen" id="nilai_dosen" class="form-control" min="0" max="100" step="0.01" value="{{ $nilai->nilai_dosen }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="nilai_perusahaan" class="form-label">Nilai Perusahaan (0-100)</label>
-                <input type="number" name="nilai_perusahaan" id="nilai_perusahaan" class="form-control" min="0" max="100" step="0.01" value="{{ $nilai->nilai_perusahaan }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="komentar_dosen" class="form-label">Komentar Dosen</label>
-                <textarea name="komentar_dosen" id="komentar_dosen" class="form-control" rows="3">{{ $nilai->komentar_dosen }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="komentar_perusahaan" class="form-label">Komentar Perusahaan</label>
-                <textarea name="komentar_perusahaan" id="komentar_perusahaan" class="form-control" rows="3">{{ $nilai->komentar_perusahaan }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" id="status" class="form-control" required>
-                    <option value="draft" {{ $nilai->status === 'draft' ? 'selected' : '' }}>Draft</option>
-                    <option value="submitted" {{ $nilai->status === 'submitted' ? 'selected' : '' }}>Submitted</option>
-                    <option value="approved" {{ $nilai->status === 'approved' ? 'selected' : '' }}>Approved</option>
-                </select>
-            </div>
-        @endif
-
-        <button type="submit" class="btn btn-primary">Update Nilai</button>
-        <a href="{{ route('nilai.index', ['role' => $role, 'user_id' => $userId]) }}" class="btn btn-secondary">Kembali</a>
-    </form>
+    </div>
 </div>
 @endsection
