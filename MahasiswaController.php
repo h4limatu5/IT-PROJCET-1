@@ -2,172 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa;
-use App\Models\Prodi;
 use Illuminate\Http\Request;
+use App\Models\Mahasiswa;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\UpdateMahasiswaProfileRequest;
 
 class MahasiswaController extends Controller
 {
+   public function __construct()
+{
+    $this->middleware('auth');
+}
+
+
     public function index()
     {
-        $mahasiswas = Mahasiswa::with('prodi')->get();
-        return view('mahasiswa.index', compact('mahasiswas'));
+        $mahasiswas = Mahasiswa::latest()->paginate(10);
+        return view('mahasiswas.index', compact('mahasiswas'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        $prodis = Prodi::all();
-        return view('mahasiswa.create', compact('prodis'));
+        return view('mahasiswas.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:mahasiswas,email',
             'nim' => 'required|string|max:20|unique:mahasiswas,nim',
-            'prodi_id' => 'required|exists:prodis,id',
-            'phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email' => 'required|email|max:255|unique:mahasiswas,email',
+            'phone' => 'required|string|max:20',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'program_studi' => 'required|string|max:100',
         ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+        if ($request->hasFile('profile_photo')) {
+            $validated['foto'] = $request->file('profile_photo')->store('profile_photos', 'public');
         }
 
-        Mahasiswa::create($data);
+        Mahasiswa::create($validated);
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Mahasiswa berhasil ditambahkan.');
+        return redirect()->route('mahasiswas.index')->with('success', 'Profil mahasiswa berhasil ditambahkan!');
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Mahasiswa $mahasiswa)
     {
-        $mahasiswa->load('prodi', 'bimbingans', 'seminars', 'nilais', 'dokumens');
-        return view('mahasiswa.show', compact('mahasiswa'));
+        return view('mahasiswas.show', compact('mahasiswa'));
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Mahasiswa $mahasiswa)
     {
-        $prodis = Prodi::all();
-        return view('mahasiswa.edit', compact('mahasiswa', 'prodis'));
+        return view('mahasiswas.edit', compact('mahasiswa'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:mahasiswas,email,' . $mahasiswa->id,
-            'nim' => 'required|string|max:20|unique:mahasiswas,nim,' . $mahasiswa->id,
-            'prodi_id' => 'required|exists:prodis,id',
-            'phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nim' => ['required', 'string', 'max:20', Rule::unique('mahasiswas')->ignore($mahasiswa->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('mahasiswas')->ignore($mahasiswa->id)],
+            'phone' => 'required|string|max:20',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'program_studi' => 'required|string|max:100',
         ]);
 
-        $data = $request->all();
-
-        if ($request->hasFile('photo')) {
-            if ($mahasiswa->photo && Storage::disk('public')->exists($mahasiswa->photo)) {
-                Storage::disk('public')->delete($mahasiswa->photo);
+        if ($request->hasFile('profile_photo')) {
+            if ($mahasiswa->foto) {
+                Storage::delete('public/' . $mahasiswa->foto);
             }
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+            $validated['foto'] = $request->file('profile_photo')->store('profile_photos', 'public');
         }
 
-        $mahasiswa->update($data);
+        $mahasiswa->update($validated);
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Mahasiswa berhasil diperbarui.');
+        return redirect()->route('mahasiswas.show', $mahasiswa)->with('success', 'Profil berhasil diperbarui!');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Mahasiswa $mahasiswa)
     {
-        if ($mahasiswa->photo && Storage::disk('public')->exists($mahasiswa->photo)) {
-            Storage::disk('public')->delete($mahasiswa->photo);
+        if ($mahasiswa->foto) {
+            Storage::delete('public/' . $mahasiswa->foto);
         }
 
         $mahasiswa->delete();
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Mahasiswa berhasil dihapus.');
-    }
-
-    public function profile(Mahasiswa $mahasiswa)
-    {
-        return view('mahasiswa.profile', compact('mahasiswa'));
-    }
-
-    public function updateProfile(Request $request, Mahasiswa $mahasiswa)
-    {
-        $request->validate([
-            'phone' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $data = $request->only(['phone']);
-
-        if ($request->hasFile('photo')) {
-            if ($mahasiswa->photo && Storage::disk('public')->exists($mahasiswa->photo)) {
-                Storage::disk('public')->delete($mahasiswa->photo);
-            }
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
-        }
-
-        $mahasiswa->update($data);
-
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
-    }
-
-    public function bulkCreate()
-    {
-        $prodis = Prodi::all();
-        return view('mahasiswa.bulk_create', compact('prodis'));
-    }
-
-    public function bulkStore(Request $request)
-    {
-        $request->validate([
-            'mahasiswas' => 'required|string',
-        ]);
-
-        $mahasiswasData = json_decode($request->mahasiswas, true);
-
-        if (!$mahasiswasData || !is_array($mahasiswasData)) {
-            return redirect()->back()->withErrors(['mahasiswas' => 'Format data tidak valid. Harus berupa JSON array.']);
-        }
-
-        $errors = [];
-        $successCount = 0;
-
-        foreach ($mahasiswasData as $index => $data) {
-            try {
-                $validator = Validator::make($data, [
-                    'name' => 'required|string|max:255',
-                    'email' => 'required|email|unique:mahasiswas,email',
-                    'nim' => 'required|string|max:20|unique:mahasiswas,nim',
-                    'prodi_id' => 'required|exists:prodis,id',
-                    'phone' => 'nullable|string|max:20',
-                ]);
-
-                if ($validator->fails()) {
-                    $errors[] = "Mahasiswa " . ($index + 1) . ": " . implode(', ', $validator->errors()->all());
-                    continue;
-                }
-
-                Mahasiswa::create($data);
-                $successCount++;
-
-            } catch (\Exception $e) {
-                $errors[] = "Mahasiswa " . ($index + 1) . ": " . $e->getMessage();
-            }
-        }
-
-        $message = $successCount . " mahasiswa berhasil ditambahkan.";
-        if (!empty($errors)) {
-            $message .= " Error pada: " . implode('; ', $errors);
-        }
-
-        return redirect()->route('mahasiswa.index')->with('success', $message);
+        return redirect()->route('mahasiswas.index')->with('success', 'Profil mahasiswa berhasil dihapus!');
     }
 }

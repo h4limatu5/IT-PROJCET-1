@@ -2,39 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
-    protected $fillable = ['name', 'email', 'nim', 'prodi_id', 'perusahaan_id', 'photo', 'phone'];
+    use HasFactory;
 
-    public function prodi()
-    {
-        return $this->belongsTo(Prodi::class);
-    }
+    protected $table = 'mahasiswa';
 
-    public function bimbingans()
-    {
-        return $this->hasMany(Bimbingan::class);
-    }
+    protected $fillable = [
+        'user_id',
+        'name',
+        'nim',
+        'email',
+        'phone',
+        'program_studi',
+        'foto',
+    ];
 
-    public function seminars()
+    // Relasi ke user
+    public function user()
     {
-        return $this->hasMany(Seminar::class);
-    }
-
-    public function nilais()
-    {
-        return $this->hasMany(Nilai::class);
-    }
-
-    public function dokumens()
-    {
-        return $this->hasMany(Dokumen::class);
-    }
-
-    public function perusahaan()
-    {
-        return $this->belongsTo(Perusahaan::class);
+        return $this->belongsTo(User::class);
     }
 }
