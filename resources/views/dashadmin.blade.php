@@ -345,7 +345,7 @@
     <nav class="sidebar">
         <h2>Dashboard</h2>
         <ul>
-            <li class="active"><a href="{{ route('dashadmin') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li class="active"><a href="{{ route('dashadmin') }}"><i class="fas fa-tachometer-alt"></i> Dashboard Admin</a></li>
             <li><a href="{{ route('prodi.index') }}"><i class="fas fa-file-alt"></i> Data Prodi</a></li>
             <li><a href="{{ route('dosen.index') }}"><i class="fas fa-users"></i> Data Dosen Pembimbing</a></li>
             <li><a href="{{ route('mahasiswa.index') }}"><i class="fas fa-user-graduate"></i> Data Mahasiswa</a></li>
