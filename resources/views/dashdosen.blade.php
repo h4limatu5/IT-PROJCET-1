@@ -362,7 +362,7 @@
     <main class="main-content">
         <header class="header">
             <div class="left-section">
-                <h1>Selamat Datang di Dashboard Dosen</h1>
+                <h1></h1>
             </div>
             <div class="right-section">
                 <div class="user-info">
