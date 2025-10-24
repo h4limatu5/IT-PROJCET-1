@@ -43,7 +43,8 @@ Route::get('/dashboardmhs', function () {
     $seminars = \App\Models\Seminar::where('mahasiswa_id', $userId)->get();
     $bimbingans = \App\Models\Bimbingan::where('mahasiswa_id', $userId)->get();
     $nilais = \App\Models\Nilai::where('mahasiswa_id', $userId)->get();
-    return view('dashboardmhs', compact('seminars', 'bimbingans', 'nilais', 'userId'));
+    $pengajuanPKLs = \App\Models\PengajuanPKL::where('mahasiswa_id', $userId)->get();
+    return view('dashboardmhs', compact('seminars', 'bimbingans', 'nilais', 'pengajuanPKLs', 'userId'));
 })->name('dashboardmhs');
 
 Route::get('/mitra', function () {
@@ -80,6 +81,9 @@ Route::resource('dosen', DosenController::class);
 // Dokumen Routes
 Route::resource('dokumen', App\Http\Controllers\DokumenController::class);
 Route::post('dokumen/{id}/validate', [App\Http\Controllers\DokumenController::class, 'validateDocument'])->name('dokumen.validate');
+
+// Pengajuan PKL Routes
+Route::resource('pengajuan-pkl', App\Http\Controllers\PengajuanPKLController::class);
 
 // Kalender Routes
 Route::get('kalender', [App\Http\Controllers\KalenderController::class, 'index'])->name('kalender.index');

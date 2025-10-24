@@ -33,6 +33,11 @@
                         <li><a class="dropdown-item" href="{{ route('dosen.index') }}">Dosen</a></li>
                         <li><a class="dropdown-item" href="{{ route('mahasiswa.index') }}">Mahasiswa</a></li>
                         <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('dokumen.index') }}">Dokumen</a></li>
+                        <li><a class="dropdown-item" href="{{ route('seminar.index') }}">Seminar</a></li>
+                        <li><a class="dropdown-item" href="{{ route('bimbingan.index') }}">Bimbingan</a></li>
+                        <li><a class="dropdown-item" href="{{ route('nilai.index') }}">Nilai</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('mitra') }}">Mitra</a></li>
                     </ul>
                 </li>

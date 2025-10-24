@@ -347,6 +347,7 @@
         <ul>
             <li class="active"><a href="{{ route('dashboardmhs') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="{{ route('mahasiswa.profile', ['mahasiswa' => 1]) }}"><i class="fas fa-user"></i> Profil</a></li>
+            <li><a href="{{ route('pengajuan-pkl.index') }}"><i class="fas fa-briefcase"></i> Pengajuan PKL</a></li>
             <li><a href="{{ route('dokumen.index') }}"><i class="fas fa-file-upload"></i>Upload Dokumen</a></li>
             <li><a href="{{ route('seminar.index', ['role' => 'mahasiswa', 'user_id' => 1]) }}"><i class="fas fa-calendar-check"></i> Jadwal Seminar</a></li>
             <li><a href="{{ route('bimbingan.index', ['role' => 'mahasiswa', 'user_id' => 1]) }}"><i class="fas fa-calendar-alt"></i> Jadwal Bimbingan</a></li>
@@ -391,6 +392,13 @@
                     <div class="card-content">
                         <div class="card-title">Bimbingan Hari Ini</div>
                         <div class="card-value">0</div>
+                    </div>
+                </div>
+                <div class="card yellow">
+                    <i class="fas fa-briefcase"></i>
+                    <div class="card-content">
+                        <div class="card-title">Pengajuan PKL</div>
+                        <div class="card-value">{{ $pengajuanPKLs->count() }}</div>
                     </div>
                 </div>
                 <div class="card purple">

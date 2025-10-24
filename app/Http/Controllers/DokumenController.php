@@ -18,8 +18,8 @@ class DokumenController extends Controller
     public function index()
     {
         // Assuming role-based access, for now using hardcoded user_id
-        $userId = 1; // Mahasiswa ID
-        $role = 'mahasiswa'; // This should come from authentication
+        $userId = 1; // User ID
+        $role = 'mahasiswa'; // This should come from authentication, set to 'mahasiswa' for testing upload functionality
 
         if ($role == 'mahasiswa') {
             $dokumens = Dokumen::where('mahasiswa_id', $userId)->get();
@@ -38,7 +38,7 @@ class DokumenController extends Controller
             $dokumens = collect();
         }
 
-        return view('dokumen.index', compact('dokumens'));
+        return view('dokumen.index', compact('dokumens', 'role'));
     }
 
     /**
@@ -144,7 +144,7 @@ class DokumenController extends Controller
     }
 
     /**
-     * Validate document (for Kaprodi)
+     * Validate document (for Kaprodi and Dosen)
      */
     public function validateDocument(Request $request, $id)
     {
@@ -154,9 +154,16 @@ class DokumenController extends Controller
             'status' => 'required|in:validated,rejected',
         ]);
 
+        // Assuming role-based access, for now using hardcoded user_id and role
+        $userId = 1; // User ID
+        $role = 'kaprodi'; // This should come from authentication, can be 'kaprodi' or 'dosen'
+
+        $validatorType = ($role == 'kaprodi') ? 'kaprodi' : 'dosen';
+
         $dokumen->update([
             'status' => $request->status,
-            'validated_by' => 1, // Hardcoded Kaprodi ID
+            'validated_by' => $userId,
+            'validator_type' => $validatorType,
             'validated_at' => now(),
         ]);
 

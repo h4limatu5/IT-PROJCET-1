@@ -360,7 +360,7 @@
                 <nav>
                     <ul>
                         <li><a href="{{route (name:'home')}}" class="active">Beranda</a></li>
-                        <li><a href="{{route (name:'perusahaan.index')}}">Perushaan</a></li>
+                        <li><a href="{{route (name:'perusahaan.index')}}">Perusahaan</a></li>
                         
                     </ul>
                 </nav>

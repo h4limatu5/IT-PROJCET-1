@@ -1,12 +1,12 @@
-# TODO: Implement Mahasiswa CRUD module in Laravel PKL management system
+# TODO: Implement PengajuanPKL CRUD module in Laravel PKL management system
 
 ## Tasks
-- [x] MahasiswaController with CRUD methods (already exists)
-- [x] Mahasiswa model with relationships (already exists)
-- [x] Mahasiswa migration (already exists)
-- [x] Mahasiswa resource routes in routes/web.php (already exists)
-- [x] Mahasiswa views folder and files (index.blade.php, create.blade.php, edit.blade.php, show.blade.php) (already exists)
-- [x] Update dashadmin.blade.php to link to mahasiswa.index
-- [x] Update mahasiswa views to use nama_prodi instead of name for Prodi model
-- [x] Add bulk create functionality for mahasiswa
-- [x] Test CRUD functionality
+- [x] PengajuanPKL model with fillable and relationships
+- [x] PengajuanPKL migration
+- [x] PengajuanPKLController with CRUD methods
+- [x] PengajuanPKL views (index.blade.php, create.blade.php, edit.blade.php, show.blade.php)
+- [x] PengajuanPKL resource routes in routes/web.php
+- [x] PengajuanPKLPolicy for authorization
+- [x] Update dashboardmhs.blade.php to include Pengajuan PKL link and stats
+- [x] Update dashboard route to pass pengajuanPKLs data
+- [x] Run migration
